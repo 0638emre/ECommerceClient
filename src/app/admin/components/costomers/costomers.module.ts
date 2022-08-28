@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CostomersComponent } from './costomers.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -9,7 +10,10 @@ import { CostomersComponent } from './costomers.component';
     CostomersComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule.forChild([
+       {path: "", component:CostomersComponent}
+    ])
   ]
 })
 export class CostomersModule { }
