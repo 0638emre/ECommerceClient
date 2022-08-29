@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DashboardComponent } from './admin/components/dashboard/dashboard.component';
 import { LayoutComponent } from './admin/layout/layout.component';
 import { HomeComponent } from './ui/components/home/home.component';
 
 const routes: Routes = [
     { path: "admin", component:LayoutComponent, 
     children: [
-      {path:"", component:LayoutComponent},
+      {path:"", component:DashboardComponent},
       {path:"customers", loadChildren: () => import("./admin/components/costomers/costomers.module").then(module=> module.CostomersModule)},
       {path:"products", loadChildren: () => import("./admin/components/products/products.module").then(module=> 
       module.ProductsModule)},
