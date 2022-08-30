@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { concatWith } from 'rxjs';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from './services/ui/custom-toastr.service';
 declare var $: any;
 
@@ -16,6 +17,9 @@ export class AppComponent {
 
 
 }
+
+// $.get("https://localhost:7125/api/products", data =>
+//   console.log(data))
 
 // $(document).ready(() =>
 // {
