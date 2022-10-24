@@ -6,9 +6,10 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-
+import {MatTableModule} from '@angular/material/table';
 import { CreateComponent } from './create/create.component';
 import { ListComponent } from './list/list.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 
@@ -26,7 +27,9 @@ import { ListComponent } from './list/list.component';
     MatSidenavModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule
   ]
 })
 export class ProductsModule { }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
-import { Create_Product } from 'src/app/contracts/create_product';
+import { Create_Product } from 'src/app/contracts/Create_Product';
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { ProductService } from 'src/app/services/common/models/product.service';
 
@@ -35,7 +35,15 @@ export class CreateComponent extends BaseComponent implements OnInit {
               dismissOthers: true,
               messageType:MessageType.Success,
               position: Position.BottomRight
-            })});
+            })
+          }, errorMessage => {
+            this.alertify.message(errorMessage,
+              {
+                dismissOthers : true,
+                messageType : MessageType.Error,
+                position : Position.BottomRight
+              });
+          });
     //ardından servisden bir sonuç döndüğünde onu hidespanner ile kapatalım. fakat bunun için productservice üzerindeki fonksiyona da parametre gereklidir.
   }
 }
