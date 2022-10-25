@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import { Create_Product } from 'src/app/contracts/Create_Product';
@@ -16,8 +16,12 @@ export class CreateComponent extends BaseComponent implements OnInit {
     super(spiner)
    }
 
+   //burada bir create işlemi olduğunda list componenti çalışması için bir event outputu oluşturacağız ve list componentinin ts inde ise input eventi oluşturacağız
+
   ngOnInit(): void {
   }
+
+  @Output() createdProduct : EventEmitter<Create_Product> = new EventEmitter();
 
   create(name :HTMLInputElement, stock :HTMLInputElement, price :HTMLInputElement)  {
 
@@ -36,6 +40,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
               messageType:MessageType.Success,
               position: Position.BottomRight
             })
+            this.createdProduct.emit(create_product); //burada eklenen datayı emit ediyoruz. ki list componentinde listelensin
           }, errorMessage => {
             this.alertify.message(errorMessage,
               {
@@ -43,7 +48,10 @@ export class CreateComponent extends BaseComponent implements OnInit {
                 messageType : MessageType.Error,
                 position : Position.BottomRight
               });
+              
           });
+    
+          
     //ardından servisden bir sonuç döndüğünde onu hidespanner ile kapatalım. fakat bunun için productservice üzerindeki fonksiyona da parametre gereklidir.
   }
 }

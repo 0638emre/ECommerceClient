@@ -31,9 +31,11 @@ export class ProductService {
     }
 
   //bu servis ile ürün listesini backend apimizden çekeceğiz
-  async read(successCallBack?: () => void, errorCallBack?: (errorMessage:string) => void): Promise<List_Product[]> {
-    const promiseData : Promise<List_Product[]> = this.httpClientService.get<List_Product[]>({
-      controller:"products"
+  async read(page: number=0, size : number=5, successCallBack?: () => void, errorCallBack?: (errorMessage:string) => void)
+  : Promise<{totalCount:number; products:List_Product[]}> {
+    const promiseData : Promise<{totalCount:number; products:List_Product[]}> = this.httpClientService.get<{totalCount:number; products:List_Product[]}>({
+      controller:"products",
+      queryString: `page=${page}&size=${size}`
     }).toPromise()
 
     //gelen resp başarılı ise then hatalı ise catch çalışacak. Buradaki d gelen data ile ilgili. atyrıntılı bakılabilir.

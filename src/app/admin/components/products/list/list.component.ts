@@ -28,17 +28,28 @@ export class ListComponent extends BaseComponent implements OnInit {
   //   this.dataSource.paginator = this.paginator;
   // }
 
-  //ngOnInit sayfa ilk yüklendiğinde çalışır.
-  async ngOnInit() {
+
+  async getProducts(){
     this.showSpinner(SpinnerType.BallFussion);
-    const allProducts : List_Product[]= await this.productService.read(()=> this.hideSpinner(SpinnerType.BallFussion), 
+    const allProducts : {totalCount:number; products:List_Product[]}= await this.productService.read(this.paginator ? this.paginator.pageIndex : 0, this. paginator ? this.paginator.pageSize : 5,()=> this.hideSpinner(SpinnerType.BallFussion), 
             errorMessage => this.alertifyService.message(errorMessage,{
                 dismissOthers : true,
                 messageType: MessageType.Error,
                 position: Position.TopRight
             }));
-    this.dataSource = new MatTableDataSource<List_Product>(allProducts);
-    this.dataSource.paginator = this.paginator;
+    this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
+    this.paginator.length = allProducts.totalCount;
+    // this.dataSource.paginator = this.paginator; bunu kapatıyoruz çünkü artık biz direkt olarak API seviyesinde pagination yapıyoruz ona göre data gönderiyoruz
+  };
+
+  //page her değiştiğinde bu fonk çalışıp yeni querysting göndrerek apiye o datalar gelecek 
+  async pageChange() {
+    await this.getProducts()
+  }
+
+  //ngOnInit sayfa ilk yüklendiğinde çalışır.
+  async ngOnInit() {
+    await this.getProducts();
 
   };
 }
