@@ -12,7 +12,7 @@ export class AppComponent {
   title = 'ECommerceClient';
 
   constructor(private toastrService:CustomToastrService){
-    toastrService.message("test", "test Toastr", {messageType:ToastrMessageType.Info, position:ToastrPosition.BottomFullWidth})
+    // toastrService.message("test", "test Toastr", {messageType:ToastrMessageType.Info, position:ToastrPosition.BottomFullWidth})
   }
 
 

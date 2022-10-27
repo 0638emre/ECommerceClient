@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable,firstValueFrom } from 'rxjs';
 import { Create_Product } from 'src/app/contracts/Create_Product';
 import { List_Product } from 'src/app/contracts/List_Product';
 import { HttpClientService } from '../http-client.service';
@@ -44,4 +45,13 @@ export class ProductService {
 
     return await promiseData;
   } 
+
+
+  async delete(id: string) {
+    const deleteObservable : Observable<any> = this.httpClientService.delete<any>({
+      controller:"products"
+    }, id);
+
+    await firstValueFrom(deleteObservable);
+  }
 }

@@ -7,6 +7,8 @@ import { List_Product } from 'src/app/contracts/List_Product';
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { ProductService } from 'src/app/services/common/models/product.service';
 
+declare var $ : any; // burada jquery i talep ediyoruz
+
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -17,7 +19,9 @@ export class ListComponent extends BaseComponent implements OnInit {
   constructor(spinner: NgxSpinnerService,private productService: ProductService, private alertifyService: AlertifyService) { 
     super(spinner)
   }
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate','updatedDate']; //grid de görüntelemek istediğimiz kolonları veriyoruz
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate','updatedDate', 'edit','delete']; //grid de görüntelemek istediğimiz kolonları veriyoruz
+  //silme işlemi içinde bir kolon veriyoruz ki ilgili satırın karşılığında buton oluşsun
+
   dataSource : MatTableDataSource<List_Product> = null; //gelen verileri burada karşılıyoruz.
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -41,6 +45,14 @@ export class ListComponent extends BaseComponent implements OnInit {
     this.paginator.length = allProducts.totalCount;
     // this.dataSource.paginator = this.paginator; bunu kapatıyoruz çünkü artık biz direkt olarak API seviyesinde pagination yapıyoruz ona göre data gönderiyoruz
   };
+
+
+  // //buradaki işlemi her yerde kullanabiliriz o yüzden single responsibility olmalı.
+  // delete(id, event){
+  //   const img : HTMLImageElement = event.srcElement;
+  //   // console.log(img.parentElement.parentElement) //burada tr yi yakalamak için çünkü o satırı hem data olarak hem görsel olarak sileceğiz.
+  //   $(img.parentElement.parentElement).fadeOut(1500); // burada jquery kullanarak ilgili satırı 1,5 sn de sil dedik.
+  // }
 
   //page her değiştiğinde bu fonk çalışıp yeni querysting göndrerek apiye o datalar gelecek 
   async pageChange() {
