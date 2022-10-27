@@ -16,7 +16,7 @@ export class CostomersComponent extends BaseComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.showSpinner(SpinnerType.BallFussion);
+    // this.showSpinner(SpinnerType.BallFussion);
   }
 
 }
