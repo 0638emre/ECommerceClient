@@ -1,8 +1,13 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxFileDropEntry } from 'ngx-file-drop';
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerType } from 'src/app/base/base.component';
+import { FileUploadDialogComponent, FileUploadDialogState } from 'src/app/dialogs/file-upload-dialog/file-upload-dialog.component';
 import { AlertifyService, MessageType, Position } from '../../admin/alertify.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../../ui/custom-toastr.service';
+import { DialogService } from '../dialog.service';
 import { HttpClientService } from '../http-client.service';
 
 @Component({
@@ -15,7 +20,10 @@ import { HttpClientService } from '../http-client.service';
 export class FileUploadComponent {
   constructor(private httpClientService: HttpClientService,
     private alertifyService: AlertifyService,
-    private customToastrService: CustomToastrService) {
+    private customToastrService: CustomToastrService,
+    private dialog: MatDialog,
+    private dialogService: DialogService,
+    private spinner : NgxSpinnerService) {
   }
 
   @Input() options: Partial<FileUploadOptions>;
@@ -32,46 +40,75 @@ export class FileUploadComponent {
       });
     }
 
-    this.httpClientService.post({
-      controller:this.options.controller,
-      action: this.options.action,
-      queryString: this.options.queryString,
-      headers: new HttpHeaders({"responseType" : "blob"})
-    }, fileData).subscribe(data => {
-      //dosya yükleme başarılı ise
 
-      const message : string = "Başarıyla yüklendi.";
-      if (this.options.isAdminPage) {
-        //burada admin ve ui da farklı alert servisleri kullandığımız için bu şekilde bir çözüme gittik
-        this.alertifyService.message(message, {
-          dismissOthers: true,
-          messageType: MessageType.Success,
-          position: Position.BottomRight
+    //dialog açıldığında ve onaylıyorsa aşağıdaki file yükleme işini yap 
+    this.dialogService.openDialog({
+      componentType:FileUploadDialogComponent,
+      data: FileUploadDialogState,
+      afterClosed: () =>{
+        this.spinner.show(SpinnerType.BallNewtonCradle)
+        this.httpClientService.post({
+          controller:this.options.controller,
+          action: this.options.action,
+          queryString: this.options.queryString,
+          headers: new HttpHeaders({"responseType" : "blob"})
+        }, fileData).subscribe(data => {
+          //dosya yükleme başarılı ise
+    
+          const message : string = "Başarıyla yüklendi.";
+          if (this.options.isAdminPage) {
+            //burada admin ve ui da farklı alert servisleri kullandığımız için bu şekilde bir çözüme gittik
+            this.alertifyService.message(message, {
+              dismissOthers: true,
+              messageType: MessageType.Success,
+              position: Position.BottomRight
+            })
+          }else{
+            this.customToastrService.message(message,"Başarılı", {
+              messageType : ToastrMessageType.Success,
+              position : ToastrPosition.BottomRight
+            })
+          }
+        this.spinner.hide(SpinnerType.BallNewtonCradle)
+          
+
+        }, (errorResponse : HttpErrorResponse) =>  {
+          //dosya yükleme başarısız ise   
+          const message : string = "Dosya yükleme başarısız.";
+          if (this.options.isAdminPage) {
+            //burada admin ve ui da farklı alert servisleri kullandığımız için bu şekilde bir çözüme gittik
+            this.alertifyService.message(message, {
+              dismissOthers: true,
+              messageType: MessageType.Error,
+              position: Position.BottomRight
+            })
+          }else{
+            this.customToastrService.message(message,"Başarısız", {
+              messageType : ToastrMessageType.Error,
+              position : ToastrPosition.BottomRight
+            })
+          }
+        this.spinner.hide(SpinnerType.BallNewtonCradle)
         })
-      }else{
-        this.customToastrService.message(message,"Başarılı", {
-          messageType : ToastrMessageType.Success,
-          position : ToastrPosition.BottomRight
-        })
-      }
-    }, (errorResponse : HttpErrorResponse) =>  {
-      //dosya yükleme başarısız ise   
-      const message : string = "Dosya yükleme Başarısız.";
-      if (this.options.isAdminPage) {
-        //burada admin ve ui da farklı alert servisleri kullandığımız için bu şekilde bir çözüme gittik
-        this.alertifyService.message(message, {
-          dismissOthers: true,
-          messageType: MessageType.Error,
-          position: Position.BottomRight
-        })
-      }else{
-        this.customToastrService.message(message,"Başarısız", {
-          messageType : ToastrMessageType.Error,
-          position : ToastrPosition.BottomRight
-        })
-      }
+      },
     })
+
+   
   } 
+
+
+  // openDialog(afterClosed: any): void {
+  //   const dialogRef = this.dialog.open(FileUploadDialogComponent, {
+  //     width: '250px',
+  //     data: FileUploadDialogState.Yes,
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if(result == FileUploadDialogState.Yes) {-
+  //       afterClosed();
+  //     }
+  //   });
+  // }
 
 }
 
