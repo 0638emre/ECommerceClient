@@ -26,6 +26,7 @@ export class FileUploadComponent {
     private spinner : NgxSpinnerService) {
   }
 
+  //bu yapılanmayı selector ile burayı çağırdığımız her yerde göndermemiz gerekir.
   @Input() options: Partial<FileUploadOptions>;
 
   public files: NgxFileDropEntry[];
