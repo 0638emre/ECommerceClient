@@ -61,7 +61,7 @@ frm : FormGroup;
 
     // var c = this.component
     
-    debugger;
+    // debugger;
 
     if (this.frm.invalid)
       return;
