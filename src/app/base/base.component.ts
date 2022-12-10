@@ -15,8 +15,10 @@ export class BaseComponent {
   }
 }
 
+
 export enum SpinnerType {
-  SquareJellyBox ="s1",
+  SquareJellyBox = "s1",
   BallFussion = "s2",
   BallNewtonCradle = "s3",
+  BallAtom = "BallAtom"
 }
