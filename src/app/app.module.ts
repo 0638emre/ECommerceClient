@@ -8,11 +8,17 @@ import { UiModule } from './ui/ui.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BaseComponent } from './base/base.component';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { DeleteDirective } from './directives/admin/delete.directive';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './ui/components/login/login.component';
-import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import {
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from '@abacritt/angularx-social-login';
+import {HttpErrorHandlerInterceptorService} from "./services/common/http-error-handler-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -30,7 +36,7 @@ import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 
     JwtModule.forRoot({
       config : {
         tokenGetter: () => localStorage.getItem("accessToken"),
-        allowedDomains: ["localhost:7125"] 
+        allowedDomains: ["localhost:7125"]
       }
     }),
     SocialLoginModule
@@ -45,10 +51,17 @@ import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider("276966639741-e4up48p4o5q1o5433tte5fcnbld36mq8.apps.googleusercontent.com")
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider("1587845834993981")
           }
         ],
         onError: err => console.log(err)
       } as SocialAuthServiceConfig
+    },
+    {
+      provide: HTTP_INTERCEPTORS, useClass:HttpErrorHandlerInterceptorService, multi: true
     }
   ],
   bootstrap: [AppComponent]
