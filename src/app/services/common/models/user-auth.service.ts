@@ -14,7 +14,7 @@ export class UserAuthService {
 
   }
 
-   async login(userNameOrEmail: string, password: string, callBackFunction?: () => void): Promise<any> {
+  async login(userNameOrEmail: string, password: string, callBackFunction?: () => void): Promise<any> {
     const observable: Observable<any | TokenResponse> = this.httpClientService.post<any | TokenResponse>({
       controller: "auth",
       action: "login"
@@ -28,11 +28,30 @@ export class UserAuthService {
 
       this.toastrService.message("Kullanıcı girişi başarıyla sağlanmıştır.", "Giriş Başarılı", {
         messageType: ToastrMessageType.Success,
-        position: ToastrPosition.TopRight
+        position: ToastrPosition.BottomFullWidth
       })
     }
 
     callBackFunction();
+  }
+  async refreshTokenLogin(refreshToken: string, callBackFunction?: (state) => void): Promise<any> {
+    const observable: Observable<any | TokenResponse> = this.httpClientService.post({
+      action: "refreshtokenlogin",
+      controller: "auth"
+    }, { refreshToken: refreshToken });
+
+    try {
+      const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
+
+      if (tokenResponse) {
+        localStorage.setItem("accessToken", tokenResponse.token.accessToken);
+        localStorage.setItem("refreshToken", tokenResponse.token.refreshToken);
+      }
+
+      callBackFunction(tokenResponse ? true : false);
+    } catch {
+      callBackFunction(false);
+    }
   }
 
   async googleLogin(user: SocialUser, callBackFunction?: () => void): Promise<any> {
@@ -49,7 +68,7 @@ export class UserAuthService {
 
       this.toastrService.message("Google üzerinden giriş başarıyla sağlanmıştır.", "Giriş Başarılı", {
         messageType: ToastrMessageType.Success,
-        position: ToastrPosition.TopRight
+        position: ToastrPosition.BottomFullWidth
       });
     }
 
@@ -69,7 +88,7 @@ export class UserAuthService {
 
       this.toastrService.message("Facebook üzerinden giriş başarıyla sağlanmıştır.", "Giriş Başarılı", {
         messageType: ToastrMessageType.Success,
-        position: ToastrPosition.TopRight
+        position: ToastrPosition.BottomFullWidth
       })
     }
 

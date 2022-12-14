@@ -7,9 +7,7 @@ import { AppComponent } from './app.component';
 import { UiModule } from './ui/ui.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { BaseComponent } from './base/base.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { DeleteDirective } from './directives/admin/delete.directive';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './ui/components/login/login.component';
 import {

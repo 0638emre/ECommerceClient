@@ -9,7 +9,7 @@ import { HttpClientService } from '../http-client.service';
 
 @Injectable({
   providedIn: 'root'
-}) 
+})
 export class UserService {
 
   constructor(private httpClientService : HttpClientService, private toastrService : CustomToastrService) { }
@@ -30,12 +30,12 @@ export class UserService {
 
     const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
 
-    if (tokenResponse) //eğer token doğru ise 
+    if (tokenResponse) //eğer token doğru ise
       localStorage.setItem("accessToken", tokenResponse.token.accessToken) //local storage da bu acces token ı tutuyorum
 
       this.toastrService.message("Kullanıcı girişi başarıyla sağlanmıştır.", "Giriş Başarılı", {
         messageType : ToastrMessageType.Success,
-        position : ToastrPosition.BottomRight
+        position : ToastrPosition.BottomFullWidth
       })
 
     callBackFunction();
