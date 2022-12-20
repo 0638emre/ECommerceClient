@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
-import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
+import {Component, OnInit} from '@angular/core';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {BaseComponent} from 'src/app/base/base.component';
+import {AlertifyService, MessageType, Position} from 'src/app/services/admin/alertify.service';
+import {SignalRService} from "../../../services/common/signalr.service";
+import {ReceiveFunctions} from "../../../constans/receive-functions";
+import {HubUrls} from "../../../constans/hub-urls";
 
 @Component({
   selector: 'app-dashboard',
@@ -10,24 +13,14 @@ import { AlertifyService, MessageType, Position } from 'src/app/services/admin/a
 })
 export class DashboardComponent extends BaseComponent implements OnInit {
 
-  constructor(private alertfiy: AlertifyService, spinner:NgxSpinnerService) { 
-    super(spinner)
+  constructor(private alertfiy: AlertifyService, spinner:NgxSpinnerService, private signalRService : SignalRService) {
+    super(spinner);
+    signalRService.start(HubUrls.ProductHub);
   }
 
   ngOnInit(): void {
-    // this.showSpinner(SpinnerType.BallFussion)
+    this.signalRService.on(ReceiveFunctions.ProductAddedMessageReceiveFunction, message => {
+      this.alertfiy.message(message, {messageType : MessageType.Notify, position : Position.TopRight })
+    });
   }
-
-  // testEt()
-  // {
-  //   this.alertfiy.message("Test", {
-  //     messageType: MessageType.Success,
-  //     delay: 5,
-  //     position : Position.TopRight
-  //   })
-  // }
-
-  // dismiss() {
-  //   this.alertfiy.dismiss();
-  // }
 }
