@@ -34,8 +34,10 @@ export class ProductService {
 
   //bu servis ile ürün listesini backend apimizden çekeceğiz
   async read(page: number=0, size : number=5, successCallBack?: () => void, errorCallBack?: (errorMessage:string) => void)
-  : Promise<{totalCount:number; products:List_Product[]}> {
-    const promiseData : Promise<{totalCount:number; products:List_Product[]}> = this.httpClientService.get<{totalCount:number; products:List_Product[]}>({
+  : Promise<{totalProductCount:number; products:List_Product[]}>
+  {
+    const promiseData : Promise<{totalProductCount:number; products:List_Product[]}> =
+      this.httpClientService.get<{totalProductCount:number; products:List_Product[]}>({
       controller:"products",
       queryString: `page=${page}&size=${size}`
     }).toPromise()
@@ -45,8 +47,7 @@ export class ProductService {
       .catch((errorResponse: HttpErrorResponse) => errorCallBack(errorResponse.message))
 
     return await promiseData;
-  } 
-
+  }
 
   async delete(id: string) {
     const deleteObservable : Observable<any> = this.httpClientService.delete<any>({
@@ -63,12 +64,11 @@ export class ProductService {
     }, id);
 
     const images: List_Product_Image[] = await firstValueFrom(getObservable);
-    
+
     successCallBack();
 
     return images;
   }
-
 
   async deleteImage(id : string, imageId : string, successCallBack?: () => void) {
     const deleteObservable = this.httpClientService.delete({
@@ -79,6 +79,18 @@ export class ProductService {
 
     const deletedImages = await firstValueFrom(deleteObservable);
 
+    successCallBack();
+  }
+
+  async changeShowcaseImage(imageId:string, productId:string, successCallBack?: () =>void) : Promise<void>
+  {
+    const changeShowcaseImageObservable = this.httpClientService.get({
+      controller : "products",
+      action : "ChangeShowcaseImage",
+      queryString : `imageId=${imageId}&productId=${productId}`
+    });
+
+    await firstValueFrom(changeShowcaseImageObservable);
     successCallBack();
   }
 }

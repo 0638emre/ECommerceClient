@@ -19,9 +19,9 @@ declare var $ : any; // burada jquery i talep ediyoruz
 export class ListComponent extends BaseComponent implements OnInit {
 
   constructor(spinner: NgxSpinnerService,
-              private productService: ProductService, 
+              private productService: ProductService,
               private alertifyService: AlertifyService,
-              private dialogService: DialogService) { 
+              private dialogService: DialogService) {
     super(spinner)
   }
   displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate','updatedDate', 'photos','edit','delete']; //grid de görüntelemek istediğimiz kolonları veriyoruz
@@ -40,14 +40,14 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   async getProducts(){
     this.showSpinner(SpinnerType.BallFussion);
-    const allProducts : {totalCount:number; products:List_Product[]}= await this.productService.read(this.paginator ? this.paginator.pageIndex : 0, this. paginator ? this.paginator.pageSize : 5,()=> this.hideSpinner(SpinnerType.BallFussion), 
+    const allProducts : {totalProductCount:number; products:List_Product[]}= await this.productService.read(this.paginator ? this.paginator.pageIndex : 0, this. paginator ? this.paginator.pageSize : 5,()=> this.hideSpinner(SpinnerType.BallFussion),
             errorMessage => this.alertifyService.message(errorMessage,{
                 dismissOthers : true,
                 messageType: MessageType.Error,
                 position: Position.TopRight
             }));
     this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
-    this.paginator.length = allProducts.totalCount;
+    this.paginator.length = allProducts.totalProductCount;
     // this.dataSource.paginator = this.paginator; bunu kapatıyoruz çünkü artık biz direkt olarak API seviyesinde pagination yapıyoruz ona göre data gönderiyoruz
   };
 
@@ -69,7 +69,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   //   $(img.parentElement.parentElement).fadeOut(1500); // burada jquery kullanarak ilgili satırı 1,5 sn de sil dedik.
   // }
 
-  //page her değiştiğinde bu fonk çalışıp yeni querysting göndrerek apiye o datalar gelecek 
+  //page her değiştiğinde bu fonk çalışıp yeni querysting göndrerek apiye o datalar gelecek
   async pageChange() {
     await this.getProducts()
   }

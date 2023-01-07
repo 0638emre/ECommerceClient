@@ -22,7 +22,7 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
               @Inject(MAT_DIALOG_DATA) public data : SelectProductImageState | string,
               private productService : ProductService,
               private spinner : NgxSpinnerService,
-              private dialogService : DialogService) { 
+              private dialogService : DialogService) {
     super(dialogRef)
   }
 
@@ -33,7 +33,7 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
     explanation : "Ürün fotoğraflarını seçin ve buraya yükleyin..",
     isAdminPage : true,
     queryString : `id=${this.data}`
-  } 
+  }
 
   images : List_Product_Image[];
 
@@ -57,6 +57,15 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
           deletedCard.fadeOut(500);
         });
       }
+    });
+  }
+
+  showCase(imageId : string)
+  {
+    debugger;
+    this.spinner.show(SpinnerType.BallFussion);
+    this.productService.changeShowcaseImage(imageId, this.data as string, () => {
+      this.spinner.hide(SpinnerType.BallFussion);
     });
   }
 }

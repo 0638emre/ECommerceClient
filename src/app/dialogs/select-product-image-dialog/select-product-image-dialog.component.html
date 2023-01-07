@@ -9,9 +9,9 @@
     <!-- burada ilgili produtcta ait resimleri yüklüyoruz. -->
     <mat-card class="product-image-card" #card *ngFor="let i of images">
       <mat-card-header>
-        
+        <input type="radio" name="img" (click)="showCase(i.id)">
       </mat-card-header>
-      <img mat-card-image [src]="i.path" [alt]="i.fileName">
+      <img mat-card-image [src]="i.path" [alt]="i.path">
       <mat-card-content>
 
       </mat-card-content>
