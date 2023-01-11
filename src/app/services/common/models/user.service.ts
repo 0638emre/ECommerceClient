@@ -41,23 +41,39 @@ export class UserService {
     callBackFunction();
   }
 
-  // async googleLogin(user : SocialUser, callBackFunction? : () => void) : Promise<any> {
-  //   const observable: Observable<SocialUser | TokenResponse> = this.httpClientService.post< SocialUser | TokenResponse>({
-  //     action : "google-login",
-  //     controller: "Auth"
-  //   }, user)
+  async googleLogin(user : SocialUser, callBackFunction? : () => void) : Promise<any> {
+    const observable: Observable<SocialUser | TokenResponse> = this.httpClientService.post< SocialUser | TokenResponse>({
+      action : "google-login",
+      controller: "Auth"
+    }, user)
 
-  //   debugger;
-  //   const tokenResponse = await firstValueFrom(observable) as TokenResponse;
+    debugger;
+    const tokenResponse = await firstValueFrom(observable) as TokenResponse;
 
-  //   if (tokenResponse) {
-  //     localStorage.setItem("accessToken", tokenResponse.token.accessToken);
-  //     this.toastrService.message("Google ile başarıyla giriş yaptınız.", "Google Girişi Başarılı", {
-  //       messageType: ToastrMessageType.Success,
-  //       position : ToastrPosition.BottomRight
-  //     });
-  //   }
+    if (tokenResponse) {
+      localStorage.setItem("accessToken", tokenResponse.token.accessToken);
+      this.toastrService.message("Google ile başarıyla giriş yaptınız.", "Google Girişi Başarılı", {
+        messageType: ToastrMessageType.Success,
+        position : ToastrPosition.BottomRight
+      });
+    }
 
-  //   callBackFunction();
-  // }
+    callBackFunction();
+  }
+
+  async updatePassword(userId: string, resetToken: string, password: string, passwordConfirm: string, successCallBack?: () => void, errorCallBack?: (error) => void) {
+    const observable: Observable<any> = this.httpClientService.post({
+      action: "update-password",
+      controller: "users"
+    }, {
+      userId: userId,
+      resetToken: resetToken,
+      password: password,
+      passwordConfirm: passwordConfirm
+    });
+
+    const promiseData: Promise<any> = firstValueFrom(observable);
+    promiseData.then(value => successCallBack()).catch(error => errorCallBack(error));
+    await promiseData;
+  }
 }
