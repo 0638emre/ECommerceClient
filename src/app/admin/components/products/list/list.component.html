@@ -31,33 +31,37 @@
         <td mat-cell *matCellDef="let element"> <img src="../../../../../assets/uploadPhoto_icon.png" (click)="addProductImages(element.id)" style="cursor: pointer;" width="30" height="25"/> </td>
       </ng-container>
 
-      <ng-container matColumnDef="edit">
+      <ng-container matColumnDef="qrCode">
         <th mat-header-cell *matHeaderCellDef width="30">  </th>
+        <td mat-cell *matCellDef="let element"> <img src="../../../../../assets/qrCode.png" (click)="showQRCode(element.id)" style="cursor: pointer;" width="30" height="25"/> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef width="30">  </th>s
         <td mat-cell *matCellDef="let element"> <img src="../../../../../assets/update_icon.png" style="cursor: pointer;" width="30" height="25"/> </td>
       </ng-container>
 
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef width="30">  </th>
-        <td mat-cell *matCellDef="let element" 
+        <td mat-cell *matCellDef="let element"
             appDelete
             [id]="element.id"
             (callback)="getProducts()"
-            controller="products"> 
+            controller="products">
           <!-- burada appDelete ile bir directive çağırıyoruz. -->
           <!-- <img src="../../../../../assets/delete_icon.png" width="30" height="25" (click) = "delete(element.id, $event)"/>  -->
         </td>
       </ng-container>
 
-      <!-- data-id="{{element.id}}" bunu vererek o row a gelen id yi alabiliriz. [id]="element.id" bu şekilde de directive (delete ye) id yi gönderebiliriz--> 
+      <!-- data-id="{{element.id}}" bunu vererek o row a gelen id yi alabiliriz. [id]="element.id" bu şekilde de directive (delete ye) id yi gönderebiliriz-->
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  
+
     <mat-paginator (page) = "pageChange()"
                    [pageSizeOptions]="[5, 10, 20]"
-                   showFirstLastButtons 
+                   showFirstLastButtons
                    aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
-  

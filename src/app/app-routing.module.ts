@@ -18,6 +18,8 @@ const routes: Routes = [
           module.AuthorizeMenuModule),canActivate : [AuthGuard]},
       {path:"roles", loadChildren: () => import("./admin/components/role/role.module").then(module=>
           module.RoleModule),canActivate : [AuthGuard]},
+      {path:"users", loadChildren: () => import("./admin/components/user/user.module").then(module=>
+          module.UserModule),canActivate : [AuthGuard]},
     ],canActivate : [AuthGuard] //buradaki guard yapılanması şu şekildedir. Bu 'admin' componenti tetiklendiğinde git AujthGuard'ı çalıştır. eğer true ise aç
   },
     {path:"", component:HomeComponent},

@@ -1,13 +1,14 @@
-import { Component, Inject, OnInit, Output } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { SpinnerType } from 'src/app/base/base.component';
-import { List_Product_Image } from 'src/app/contracts/List_Product_Image';
-import { DialogService } from 'src/app/services/common/dialog.service';
-import { FileUploadOptions } from 'src/app/services/common/file-upload/file-upload.component';
-import { ProductService } from 'src/app/services/common/models/product.service';
-import { BaseDialog } from '../base/base-dialog';
-import { DeleteDialogComponent, DeleteState } from '../delete-dialog/delete-dialog.component';
+import {Component, Inject, OnInit, Output} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {SpinnerType} from 'src/app/base/base.component';
+import {List_Product_Image} from 'src/app/contracts/List_Product_Image';
+import {DialogService} from 'src/app/services/common/dialog.service';
+import {FileUploadOptions} from 'src/app/services/common/file-upload/file-upload.component';
+import {ProductService} from 'src/app/services/common/models/product.service';
+import {BaseDialog} from '../base/base-dialog';
+import {DeleteDialogComponent, DeleteState} from '../delete-dialog/delete-dialog.component';
+import {CustomToastrService, ToastrMessageType, ToastrPosition} from "../../services/ui/custom-toastr.service";
 
 declare var $: any;
 
@@ -22,7 +23,8 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
               @Inject(MAT_DIALOG_DATA) public data : SelectProductImageState | string,
               private productService : ProductService,
               private spinner : NgxSpinnerService,
-              private dialogService : DialogService) {
+              private dialogService : DialogService,
+              private toastrService : CustomToastrService) {
     super(dialogRef)
   }
 
@@ -37,10 +39,10 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
 
   images : List_Product_Image[];
 
-  //ngoninit bir interfacedir. ve implement edildiğin de constructor gibi bu componen yüklendiği anda çalışır.
+  //ngoninit bir interfacedir. ve implement edildiğin de constructor gibi bu component yüklendiği anda çalışır.
   async ngOnInit() {
-    this.spinner.show(SpinnerType.BallNewtonCradle)
-    this.images = await this.productService.readImages(this.data as string, () => this.spinner.hide(SpinnerType.BallNewtonCradle) )
+    this.spinner.show(SpinnerType.BallAtom);
+    this.images = await this.productService.readImages(this.data as string, () => this.spinner.hide(SpinnerType.BallAtom));
   }
 
 
@@ -60,12 +62,15 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
     });
   }
 
-  showCase(imageId : string)
-  {
-    debugger;
-    this.spinner.show(SpinnerType.BallFussion);
+  showCase(imageId: string) {
+    this.spinner.show(SpinnerType.BallAtom);
+
     this.productService.changeShowcaseImage(imageId, this.data as string, () => {
-      this.spinner.hide(SpinnerType.BallFussion);
+      this.spinner.hide(SpinnerType.BallAtom);
+      this.toastrService.message("Ürün birinci fotoğrafı seçildi", "Ürün Fotoğraf Seçimi" , {
+        position : ToastrPosition.BottomRight,
+        messageType : ToastrMessageType.Success
+      })
     });
   }
 }

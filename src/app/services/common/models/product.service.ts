@@ -57,16 +57,14 @@ export class ProductService {
     await firstValueFrom(deleteObservable);
   }
 
-  async readImages(id: string, successCallBack?: () => void) : Promise<List_Product_Image[]>{
+  async readImages(id: string, successCallBack?: () => void): Promise<List_Product_Image[]> {
     const getObservable: Observable<List_Product_Image[]> = this.httpClientService.get<List_Product_Image[]>({
       action: "getproductimages",
-      controller:"products"
+      controller: "products"
     }, id);
 
     const images: List_Product_Image[] = await firstValueFrom(getObservable);
-
     successCallBack();
-
     return images;
   }
 
@@ -82,15 +80,25 @@ export class ProductService {
     successCallBack();
   }
 
-  async changeShowcaseImage(imageId:string, productId:string, successCallBack?: () =>void) : Promise<void>
-  {
+  async changeShowcaseImage(imageId: string, productId: string, successCallBack?: () => void): Promise<void> {
     const changeShowcaseImageObservable = this.httpClientService.get({
-      controller : "products",
-      action : "ChangeShowcaseImage",
-      queryString : `imageId=${imageId}&productId=${productId}`
+      controller: "products",
+      action: "ChangeShowcaseImage",
+      queryString: `imageId=${imageId}&productId=${productId}`
+    });
+    await firstValueFrom(changeShowcaseImageObservable);
+    successCallBack();
+  }
+
+  async updateStockQrCodeToProduct(productId: string, stock: number, successCallBack?: () => void) {
+    const observable = this.httpClientService.put({
+      action: "qrcode",
+      controller: "products"
+    }, {
+      productId, stock
     });
 
-    await firstValueFrom(changeShowcaseImageObservable);
+    await firstValueFrom(observable);
     successCallBack();
   }
 }

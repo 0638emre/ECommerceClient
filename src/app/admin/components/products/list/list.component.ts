@@ -8,6 +8,7 @@ import { SelectProductImageDialogComponent } from 'src/app/dialogs/select-produc
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { DialogService } from 'src/app/services/common/dialog.service';
 import { ProductService } from 'src/app/services/common/models/product.service';
+import {QrcodeDialogComponent} from "../../../../dialogs/qrcode-dialog/qrcode-dialog.component";
 
 declare var $ : any; // burada jquery i talep ediyoruz
 
@@ -24,7 +25,7 @@ export class ListComponent extends BaseComponent implements OnInit {
               private dialogService: DialogService) {
     super(spinner)
   }
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate','updatedDate', 'photos','edit','delete']; //grid de görüntelemek istediğimiz kolonları veriyoruz
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate','updatedDate', 'photos','qrCode','edit','delete']; //grid de görüntelemek istediğimiz kolonları veriyoruz
   //silme işlemi içinde bir kolon veriyoruz ki ilgili satırın karşılığında buton oluşsun
 
   dataSource : MatTableDataSource<List_Product> = null; //gelen verileri burada karşılıyoruz.
@@ -77,6 +78,13 @@ export class ListComponent extends BaseComponent implements OnInit {
   //ngOnInit sayfa ilk yüklendiğinde çalışır.
   async ngOnInit() {
     await this.getProducts();
-
   };
+
+  showQRCode(productId: string) {
+    this.dialogService.openDialog({
+      componentType: QrcodeDialogComponent,
+      data: productId,
+      afterClosed: () => { }
+    })
+  }
 }
